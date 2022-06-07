@@ -2,5 +2,5 @@
 port = 7510
 # Whether or not this instance is a development instance
 development = false
-# Which levels are allowed to be logged onto the console. In order of verbosity: "error", "warn", "info", "log"
-log_level = ["error", "warn", "info", "log"]
+# Which levels are allowed to be logged onto the console. In order of verbosity: "error", "warning", "info", "log", "debug"
+log_level = ["error", "warning", "info", "log"]
