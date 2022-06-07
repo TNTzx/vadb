@@ -45,7 +45,7 @@ class VADB {
         // CUSTOM MIDDLEWARES //
         Logger.Debug("Setting up custom middlewares.");
         // rate limit
-        // override
+        app.use("*", require("./middlewares/OverrideMiddleware"));
 
         // LOADERS //
         Logger.Debug("Kick starting loaders");
