@@ -107,7 +107,7 @@ class Logger {
             // stack[0] holds this file
             // stack[1] holds where this function was called
             // stack[2] holds the file we're interested in
-            return stack[position] ? (stack[position]).getTypeName() : undefined;
+            return stack[position] ? path.basename((stack[position]).getFileName()).slice(0, -3) : undefined;
         }
     }
 }
