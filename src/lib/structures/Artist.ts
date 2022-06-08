@@ -8,7 +8,7 @@ class Artist {
         throw new Error("This class cannot be instantiated.");
     }
 
-    static async FetchById(id) {
+    static async FetchById(id: number) {
         return await Prisma.artist.findUnique({
             where: { id: id }
         });
@@ -21,7 +21,7 @@ class Artist {
     }
 
     static async Create(data) {
-        data.safeName = data.name.trim().replace(" ", "_").toLowerCase();
+        data.safeName = this.GetSafeName(data.name);
         delete data.__missing;
 
         let artist;
@@ -35,28 +35,32 @@ class Artist {
         return artist;
     }
 
-    static async Update(id, data) {
+    static async Update(id: number, data) {
         return await Prisma.artist.update({
             where: { id: id },
             data
         })
     }
+
+    static GetSafeName(name: string) {
+        return name.trim().replaceAll(" ", "_").toLowerCase();
+    }
 }
 
-module.exports = Artist;
+export default Artist;
 
-module.exports.Status = {
-    NONE: "NONE",
-    COMPLETED: "COMPLETED",
-    NO_CONTACT: "NO_CONTACT",
-    PENDING: "PENDING",
-    REQUESTED: "REQUESTED"
+export enum Status {
+    NONE = "NONE",
+    COMPLETED = "COMPLETED",
+    NO_CONTACT = "NO_CONTACT",
+    PENDING = "PENDING",
+    REQUESTED = "REQUESTED"
 }
 
-module.exports.Availability = {
-    NONE: "NONE",
-    VERIFIED: "VERIFIED",
-    DISALLOWED: "DISALLOWED",
-    CONTACT_REQUIRED: "CONTACT_REQUIRED",
-    VARIES: "VARIES"
+export enum Availability {
+    NONE = "NONE",
+    VERIFIED = "VERIFIED",
+    DISALLOWED = "DISALLOWED",
+    CONTACT_REQUIRED = "CONTACT_REQUIRED",
+    VARIES = "VARIES"
 }
