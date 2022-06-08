@@ -16,20 +16,45 @@ module.exports = (req, res, next) => {
 
     // REQUESTS //
     req.expect = (header, expected) => {
-        for (const exp of expected) {
-            if (!req.headers[header].includes(exp)) {
-                res.message(400, {
-                    message: "A header in the request was malformed and couldn't be processed.",
-                    data: {
-                        expected
-                    }
-                });
+        let result = false;
 
-                return false;
-            }
+        for (const exp of expected) {
+            if (req.headers[header].includes(exp))
+                result = true;
         }
 
-        return true;
+        if (!result) {
+            res.message(400, {
+                message: "A header in the request was malformed and couldn't be processed.",
+                data: {
+                    expected
+                }
+            })
+        }
+
+        return result;
+    }
+
+    req.validate = async () => {
+        if (req.cookies.access) {
+            let access = await Prisma.token.findFirst({
+                where: { token: req.cookies.access }
+            });
+
+            return access !== null;
+        } else if (req.headers["authorization"]) {
+            if (!req.headers["authorization"].startsWith(Config["auth_header"]))
+                return false;
+
+            let token = req.headers["authorization"].slice(Config["auth_header"].length);
+            let access = await Prisma.token.findFirst({
+                where: { token: token }
+            });
+
+            return access !== null;
+        }
+
+        return false;
     }
 
     next();
