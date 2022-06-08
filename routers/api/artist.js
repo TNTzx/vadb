@@ -7,10 +7,13 @@ router.post("/", async (req, res) => {
     if (!await req.validate())
         return res.message(403, { message: "You do not have permission to add an artist." });
 
+    if (req.headers["content-type"] === undefined)
+        return res.message(400, { message: "Missing content-type header parameter." })
+
     if (!req.expect("content-type", ["application/x-www-form-urlencoded", "application/json", "multipart/form-data"]))
         return;
 
-    Logger.Log("[/api/artists : POST] Attempting to create artist...");
+    Logger.Log("Attempting to create artist...", "/api/artists : POST");
 
     if (!Utilities.validate(["name", "status", "availability"], req.body)) {
         return res.message(400, {
@@ -30,7 +33,7 @@ router.post("/", async (req, res) => {
 
     let artist = await Artist.Create(req.body);
 
-    Logger.Log(`[/api/artists : POST] ${artist.name}`);
+    Logger.Log(`${artist.name} successfully created.`, "/api/artists : POST");
 
     return res.message(201, {
         message: `${artist.name} has been successfully added to the database.`,

@@ -1,5 +1,3 @@
-const prisma = require("@prisma/client");
-
 class Artist {
     constructor() {
         throw new Error("This class cannot be instantiated.");
@@ -20,9 +18,7 @@ class Artist {
     static async Create(data) {
         data.safeName = data.name.trim().replace(" ", "_").toLowerCase();
         
-        let artist = await Prisma.artist.create({
-            data
-        });
+        let artist = await Prisma.artist.create({ data });
 
         return artist;
     }

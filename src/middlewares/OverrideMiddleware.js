@@ -1,3 +1,5 @@
+const Logger = require("../util/Logger");
+
 module.exports = (req, res, next) => {
     // RESPONSES //
     res.code = (code, data) => {
@@ -17,6 +19,12 @@ module.exports = (req, res, next) => {
     // REQUESTS //
     req.expect = (header, expected) => {
         let result = false;
+
+        if (req.headers[header] === undefined)
+        {
+            Logger.Error(`No header with "${header}" exists.`);
+            res.message(500, { message: "Something went wrong on the server." })
+        }
 
         for (const exp of expected) {
             if (req.headers[header].includes(exp))

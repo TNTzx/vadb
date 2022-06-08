@@ -16,48 +16,44 @@ class Logger {
         throw new Error("This class cannot be instantiated.");
     }
 
-    static Error(message) {
-        this.#logBackground(message, "ERROR", Colours.ERROR, "#FFF");
+    static Error(message, type = this.#getCallerType()) {
+        this.#logBackground(message, type, "ERROR", Colours.ERROR, "#FFF");
     }
 
-    static Warn(message) {
-        this.#logBackground(message, "WARNING", Colours.WARNING, "#000");
+    static Warn(message, type = this.#getCallerType()) {
+        this.#logBackground(message, type, "WARNING", Colours.WARNING, "#000");
     }
 
-    static Info(message) {
-        this.#log(message, "INFO", Colours.INFO);
+    static Info(message, type = this.#getCallerType()) {
+        this.#log(message, type, "INFO", Colours.INFO);
     }
 
-    static Log(message) {
-        this.#log(message, "LOG", Colours.LOG);
+    static Log(message, type = this.#getCallerType()) {
+        this.#log(message, type, "LOG", Colours.LOG);
     }
 
-    static Debug(message) {
-        this.#log(message, "DEBUG", Colours.DEBUG);
+    static Debug(message, type = this.#getCallerType()) {
+        this.#log(message, type, "DEBUG", Colours.DEBUG);
     }
 
     static Empty() {
         console.log("");
     }
 
-    static #log(message, verbosity, colour) {
+    static #log(message, type, verbosity, colour) {
         if (Config["log_level"].indexOf(verbosity.toLowerCase()) === -1)
             return;
 
-        let fileType = this.#getCallerType();
-
-        this.#logToFile(`[${dateFormat(Date.now(), "HH:MM:ss")}] [${fileType}] [${verbosity}]: ${message}`)
-        console.log(`${chalk.hex(colour)("•")} [${dateFormat(Date.now(), "HH:MM:ss")}] [${fileType}] ${chalk.hex(colour)(chalk.bold(`[${verbosity}]`))}: ${message}`)
+        this.#logToFile(`[${dateFormat(Date.now(), "HH:MM:ss")}] [${type}] [${verbosity}]: ${message}`)
+        console.log(`${chalk.hex(colour)("•")} [${dateFormat(Date.now(), "HH:MM:ss")}] [${type}] ${chalk.hex(colour)(chalk.bold(`[${verbosity}]`))}: ${message}`)
     }
 
-    static #logBackground(message, verbosity, colour, textColour) {
+    static #logBackground(message, type, verbosity, colour, textColour) {
         if (Config["log_level"].indexOf(verbosity.toLowerCase()) === -1)
             return;
 
-        let fileType = this.#getCallerType();
-
-        this.#logToFile(`[${dateFormat(Date.now(), "HH:MM:ss")}] [${fileType}] [${verbosity}]: ${message}`)
-        console.log(`${chalk.hex(colour)("•")} [${dateFormat(Date.now(), "HH:MM:ss")}] [${fileType}] ${chalk.bgHex(colour)(chalk.hex(textColour)(chalk.bold(`[${verbosity}]`)))}: ${message}`)
+        this.#logToFile(`[${dateFormat(Date.now(), "HH:MM:ss")}] [${type}] [${verbosity}]: ${message}`)
+        console.log(`${chalk.hex(colour)("•")} [${dateFormat(Date.now(), "HH:MM:ss")}] [${type}] ${chalk.bgHex(colour)(chalk.hex(textColour)(chalk.bold(`[${verbosity}]`)))}: ${message}`)
     }
 
     static #logToFile(message) {
