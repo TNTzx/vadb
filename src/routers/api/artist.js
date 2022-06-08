@@ -1,6 +1,6 @@
-const Logger = require("../../src/util/Logger");
-const Utilities = require("../../src/util/Utilities");
-const Artist = require("../../src/structures/Artist");
+const Logger = require("../../lib/util/Logger");
+const Utilities = require("../../lib/util/Utilities");
+const Artist = require("../../lib/structures/Artist");
 const router = require("express").Router();
 
 router.post("/", async (req, res) => {
