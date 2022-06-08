@@ -88,7 +88,7 @@ class Logger {
     }
 
     // Copied from https://github.com/stefanpenner/get-caller-file
-    static #getCallerType(position = 3) {
+    static #getCallerType(position = 2) {
         if (position >= Error.stackTraceLimit) {
             throw new TypeError('getCallerFile(position) requires position be less then Error.stackTraceLimit but position was: `' + position + '` and Error.stackTraceLimit was: `' + Error.stackTraceLimit + '`');
         }

@@ -22,7 +22,7 @@ module.exports = (app, routerPath) => {
                 }
 
                 app.use(route, routerType)
-                Logger.Debug(`Registered router: ${router} ${aliases.length > 0 ? `With ${aliases.length} aliases (${aliases.slice(1, aliases.length).join(", ")})` : ""}`);
+                Logger.Debug(`Registered router: ${route} ${aliases.length > 0 ? `With ${aliases.length} aliases (${aliases.slice(1, aliases.length).join(", ")})` : ""}`);
             }
         }
     })(routerPath);

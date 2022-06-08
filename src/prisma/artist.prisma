@@ -3,7 +3,7 @@ model Artist {
     name         String
     safeName     String?
     aliases      String?
-    description  String
+    description  String?
     notes        String?
     genre        String?
     tracks       Int          @default(0)

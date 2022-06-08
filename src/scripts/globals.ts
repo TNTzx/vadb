@@ -1,9 +1,14 @@
-const fs = require("fs");
-const toml = require("toml");
-const { PrismaClient } = require("@prisma/client");
-const Logger = require("../lib/util/Logger");
+import fs from "fs";
+import toml from "toml";
+import { PrismaClient } from "@prisma/client";
+import Logger from "../lib/util/Logger";
 
 const prisma = new PrismaClient({ log: [ { emit: "event", level: "query" }, { emit: "event", level: "info" }, { emit: "event", level: "warn" }, { emit: "event", level: "error" } ] });
+
+declare var glob: any;
+declare var Package: any;
+declare var Config: any;
+declare var Prisma: PrismaClient;
 
 module.exports = () => {
     global.glob = {};
@@ -16,11 +21,6 @@ module.exports = () => {
 
     // closing handler
     process.on("exit", cleanup.bind(null, { cleanup: true }))
-    process.on("SIGINT", cleanup.bind(null, { exit:true } ))
-    process.on("SIGTERM", cleanup.bind(null, { exit:true } ))
-    process.on("SIGUSR1", cleanup.bind(null, { exit:true }))
-    process.on("SIGUSR2", cleanup.bind(null, { exit:true }))
-    process.on("uncaughtException", cleanup.bind(null, { exit:true }))
 }
 
 function cleanup() {

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prismix": "npx prismix && prisma format",
-    "start": "nodemon index.js"
+    "start": "tsc && cd bin/ && node index.js"
   },
   "keywords": [],
   "author": "Nora",
