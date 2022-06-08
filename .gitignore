@@ -205,3 +205,4 @@ dist
 ### User ignores
 
 config.toml
+bin/
