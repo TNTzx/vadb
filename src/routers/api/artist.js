@@ -1,6 +1,7 @@
 const Logger = require("../../lib/util/Logger");
 const Utilities = require("../../lib/util/Utilities");
 const Artist = require("../../lib/structures/Artist");
+const { Status, Availability } = require("../../lib/structures/Artist");
 const router = require("express").Router();
 
 router.post("/", async (req, res) => {
@@ -30,6 +31,12 @@ router.post("/", async (req, res) => {
 
     if (existingArtist !== null)
         return res.message(409, { message: "This artist already exists in the database." });
+
+    if (Status[req.body.status] === undefined)
+        return res.message(400, { message: `Status is invalid. List of possible values: ${Object.values(Status).join(", ")}` });
+
+    if (Availability[req.body.availability] === undefined)
+        return res.message(400, { message: `Availability is invalid. List of possible values: ${Object.values(Availability).join(", ")}` });
 
     let artist = await Artist.Create(req.body);
 
