@@ -3,7 +3,8 @@
     {
       "input": [
         "prisma/base.prisma",
-        "prisma/artist.prisma"
+        "prisma/artist.prisma",
+        "prisma/token.prisma"
       ],
       "output": "prisma/schema.prisma"
     }

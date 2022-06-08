@@ -4,3 +4,5 @@ port = 7510
 development = false
 # Which levels are allowed to be logged onto the console. In order of verbosity: "error", "warning", "info", "log", "debug"
 log_level = ["error", "warning", "info", "log"]
+# What all authorization headers should start with.
+auth_header = "Basic"

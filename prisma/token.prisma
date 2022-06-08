@@ -1,0 +1,5 @@
+model Token {
+    id         Int    @id @default(autoincrement())
+    token      String
+    assignedIp String // only for warnings.
+}
