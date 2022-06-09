@@ -20,11 +20,17 @@ module.exports = (app, routerPath) => {
                 let schema = buildSchema(routerType.schema);
                 let resolver = routerType.resolver;
 
-                app.use("/graphql" + route, graphqlHTTP({
-                    schema: schema,
-                    rootValue: resolver,
-                    graphiql: Config.development
-                }))
+                app.use("/graphql" + route, async (req, res) => {
+                    let isAdmin = await req.validate();
+                    
+                    graphqlHTTP({
+                        schema: schema,
+                        rootValue: resolver,
+                        graphiql: Config.development,
+                        context: { isAdmin }
+                    })(req, res);
+                });
+
                 Logger.Debug(`Registered graphql router: ${route}`);
             }
         }
