@@ -50,6 +50,7 @@ class VADB {
         // LOADERS //
         Logger.Debug("Kick starting loaders");
         require("./middlewares/RouterMiddleware")(app, path.join(__dirname, "../", "routers"));
+        require("./middlewares/GraphQLMiddleware")(app, path.join(__dirname, "../", "graphql"));
 
         // SETTINGS //
         app.set("json-spaces", 4);
