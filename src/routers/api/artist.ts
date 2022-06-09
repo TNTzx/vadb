@@ -8,15 +8,13 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     if (!await req.validate())
-        return res.message(403, { message: "You do not have permission to add an artist." });
+        return res.message(403, { message: "You do not have permissions to add an artist." });
 
     if (req.headers["content-type"] === undefined)
         return res.message(400, { message: "Missing content-type header parameter." })
 
     if (!req.expect("content-type", ["application/x-www-form-urlencoded", "application/json", "multipart/form-data"]))
         return;
-
-    Logger.Log("Attempting to create artist...", "/api/artists : POST");
 
     if (!Utilities.validate(["name", "status", "availability"], req.body)) {
         return res.message(400, {
@@ -36,7 +34,7 @@ router.post("/", async (req, res) => {
     let existingArtist = await Artist.FetchByName(req.body.name);
 
     if (existingArtist !== null)
-        return res.message(409, { message: "This artist already exists in the database." });
+        return res.message(409, { message: `Artist with this name already exists. (${existingArtist.id} | ${existingArtist.safeName}: ${existingArtist.name})` });
 
     let artist = await Artist.Create(req.body);
 
