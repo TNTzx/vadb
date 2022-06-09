@@ -15,8 +15,10 @@ class Artist {
     }
 
     static async FetchByName(name) {
+        let safe = this.GetSafeName(name);
+
         return await Prisma.artist.findFirst({
-            where: { name: name }
+            where: { safeName: safe }
         });
     }
 
@@ -24,18 +26,44 @@ class Artist {
         data.safeName = this.GetSafeName(data.name);
         delete data.__missing;
 
-        let artist;
+        let rights = data.rights;
+        let socials = data.socials;
+
+        delete data.rights;
+        delete data.socials;
+
+        if (data.aliases) {
+            data.aliases = JSON.stringify(data.aliases);
+        }
 
         try {
-            artist = await Prisma.artist.create({ data });
+            return await Prisma.artist.create({
+                data: {
+                    ...data,
+                    rights: { create: rights },
+                    socials: { create: socials }
+                },
+                include: {
+                    rights: true,
+                    socials: true
+                }
+            });
         } catch (e) {
             Logger.Error(e);
         }
 
-        return artist;
+        return null;
     }
 
     static async Update(id: number, data) {
+        if (data.name) {
+            data.safeName = this.GetSafeName(data.name);
+        }
+
+        if (data.aliases) {
+            data.aliases = JSON.stringify(data.aliases);
+        }
+
         return await Prisma.artist.update({
             where: { id: id },
             data

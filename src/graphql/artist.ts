@@ -1,5 +1,6 @@
 import Artist, { Status, Availability } from "../lib/structures/Artist";
 import { PrismaClient } from "@prisma/client";
+import Logger from "../lib/util/Logger";
 
 declare var Prisma: PrismaClient;
 
@@ -11,6 +12,7 @@ type Query {
 
 type Mutation {
     createArtist(data: ArtistCreateInput): Artist!
+    updateArtist(id: ID!, data: ArtistUpdateInput): Artist
 }
 
 input ArtistCreateInput {
@@ -24,6 +26,17 @@ input ArtistCreateInput {
     tracks: Int
     rights: [RightCreateInput]
     socials: [SocialCreateInput]
+}
+
+input ArtistUpdateInput {
+    name: String
+    status: Status
+    availability: Availability
+    aliases: [String]
+    description: String
+    notes: String
+    genre: String
+    tracks: Int
 }
 
 input RightCreateInput {
@@ -41,7 +54,7 @@ type Artist {
     id: ID
     name: String
     safeName: String
-    aliases: [String]
+    aliases: String
     description: String
     notes: String
     genre: String
@@ -102,14 +115,40 @@ module.exports.resolver = {
     },
     async createArtist(args: { data: ArtistCreateInput }, context) {
         if (!context.isAdmin)
-            throw new Error("Insufficient permissions.");
+            throw new Error("You do not have permissions to create an artist.");
+
+        let data = args.data;
+        let existingArtist = await Artist.FetchByName(data.name);
+
+        if (existingArtist !== null)
+            throw new Error(`Artist with this name already exists. (${existingArtist.id} | ${existingArtist.safeName}: ${existingArtist.name})`);
+
+        let artist = await Artist.Create(data);
+
+        Logger.Log(`${artist.name} successfully created.`, "/graphql/artists : GraphQL");
+
+        return artist;
+    },
+    async updateArtist(args: { id, data: ArtistUpdateInput }, context) {
+        if (!context.isAdmin)
+            throw new Error("You do not have permissions to update an artist.");
 
         let data = args.data;
 
-        if (await Artist.FetchByName(data.name) !== null)
-            throw new Error("Artist with this name already exists.");
+        let newName = data.name;
+        
+        if (newName) {
+            let existingArtist = await Artist.FetchByName(newName);
 
-        return await Artist.Create(data);
+            if (existingArtist !== null)
+                throw new Error(`Artist with this name already exists. (${existingArtist.id} | ${existingArtist.safeName}: ${existingArtist.name})`);
+        }
+
+        let artist = await Artist.Update(parseInt(args.id), data);
+
+        Logger.Log(`${artist.name} successfully updated.`, "/graphql/artists : GraphQL");
+
+        return artist;
     }
 };
 
@@ -117,6 +156,19 @@ interface ArtistCreateInput {
     name: string
     status: Status
     availability: Availability
+    aliases?: string[]
+    description?: string
+    notes?: string
+    genre?: string
+    tracks?: number
+    rights?: Right[]
+    socials?: Social[]
+}
+
+interface ArtistUpdateInput {
+    name?: string
+    status?: Status
+    availability?: Availability
     aliases?: string[]
     description?: string
     notes?: string
