@@ -10,7 +10,8 @@ class Artist {
 
     static async FetchById(id: number) {
         return await Prisma.artist.findUnique({
-            where: { id: id }
+            where: { id: id },
+            include: { rights: true, socials: true }
         });
     }
 
@@ -18,7 +19,8 @@ class Artist {
         let safe = this.GetSafeName(name);
 
         return await Prisma.artist.findFirst({
-            where: { safeName: safe }
+            where: { safeName: safe },
+            include: { rights: true, socials: true }
         });
     }
 
@@ -68,6 +70,25 @@ class Artist {
             where: { id: id },
             data
         })
+    }
+
+    static async Delete(id: number) {
+        let artist = await this.FetchById(id);
+        
+        if (artist === null)
+            return null;
+
+        await Prisma.right.deleteMany({
+            where: { id: { in: artist.rights.map(r => r.id) } }
+        });
+
+        await Prisma.social.deleteMany({
+            where: { id: { in: artist.socials.map(r => r.id) } }
+        });
+
+        return await Prisma.artist.delete({
+            where: { id: id },
+        });
     }
 
     static GetSafeName(name: string) {

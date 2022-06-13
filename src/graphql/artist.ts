@@ -6,13 +6,14 @@ declare var Prisma: PrismaClient;
 
 module.exports.schema = `
 type Query {
-    artist(id: ID!): Artist!
+    artist(id: Int!): Artist!
     artists(name: String): [Artist]
 }
 
 type Mutation {
     createArtist(data: ArtistCreateInput): Artist!
-    updateArtist(id: ID!, data: ArtistUpdateInput): Artist
+    updateArtist(id: Int!, data: ArtistUpdateInput): Artist
+    deleteArtist(id: Int!): Artist
 }
 
 input ArtistCreateInput {
@@ -51,7 +52,7 @@ input SocialCreateInput {
 }
 
 type Artist {
-    id: ID
+    id: Int
     name: String
     safeName: String
     aliases: String
@@ -68,14 +69,14 @@ type Artist {
 }
 
 type Right {
-    id: ID
+    id: Int
     name: String
     value: Boolean
     Artist: Artist
 }
 
 type Social {
-    id: ID
+    id: Int
     link: String
     type: String
     icon: String
@@ -102,7 +103,7 @@ enum Availability {
 module.exports.resolver = {
     artist: (args) => {
         return Prisma.artist.findUnique({
-            where: { id: parseInt(args.id) }
+            where: { id: args.id }
         });
     },
     artists: (args) => {
@@ -134,7 +135,6 @@ module.exports.resolver = {
             throw new Error("You do not have permissions to update an artist.");
 
         let data = args.data;
-
         let newName = data.name;
         
         if (newName) {
@@ -144,10 +144,22 @@ module.exports.resolver = {
                 throw new Error(`Artist with this name already exists. (${existingArtist.id} | ${existingArtist.safeName}: ${existingArtist.name})`);
         }
 
-        let artist = await Artist.Update(parseInt(args.id), data);
+        let artist = await Artist.Update(args.id, data);
 
         Logger.Log(`${artist.name} successfully updated.`, "/graphql/artists : GraphQL");
 
+        return artist;
+    },
+    async deleteArtist(args: { id }, context) {
+        if (!context.isAdmin)
+            throw new Error("You do not have permissions to delete an artist.");
+
+        let artist = await Artist.Delete(args.id);
+
+        if (artist === null)
+            throw new Error(`Artist with this id does not exist.`);
+
+        Logger.Log(`${artist.name} successfully deleted.`, "/graphql/artists : GraphQL");
         return artist;
     }
 };
