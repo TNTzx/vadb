@@ -1,13 +1,13 @@
-const fs = require("fs");
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const multer = require("multer");
-const Logger = require("./util/Logger");
-const path = require("path");
+import { existsSync, mkdirSync } from "fs";
+import express, { urlencoded, json } from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import multer from "multer";
+import Logger from "./util/Logger";
+import { join } from "path";
 
 class VADB {
-    static app;
+    static app: express.Express;
 
     constructor() {
         VADB.#ensureLogsDirectoryExists();
@@ -24,16 +24,14 @@ class VADB {
         });
     }
 
-    /**
-     * @param {import("express").Express} app
-     */
-    static #setup(app) {
+
+    static #setup(app: express.Express) {
         Logger.Log("Setting up server.");
 
         // MIDDLEWARE //
         Logger.Debug("Setting up middlewares.");
-        app.use(express.urlencoded({ extended: true }));
-        app.use(express.json());
+        app.use(urlencoded({ extended: true }));
+        app.use(json());
         app.use(cookieParser());
         app.use(cors());
         app.use(multer({
@@ -49,8 +47,8 @@ class VADB {
 
         // LOADERS //
         Logger.Debug("Kick starting loaders");
-        require("./middlewares/RouterMiddleware")(app, path.join(__dirname, "../", "routers"));
-        require("./middlewares/GraphQLMiddleware")(app, path.join(__dirname, "../", "graphql"));
+        require("./middlewares/RouterMiddleware")(app, join(__dirname, "../", "routers"));
+        require("./middlewares/GraphQLMiddleware")(app, join(__dirname, "../", "graphql"));
 
         // SETTINGS //
         app.set("json-spaces", 4);
@@ -62,9 +60,9 @@ class VADB {
     static #ensureLogsDirectoryExists() {
         let logs = Logger.GetLogsDirectory();
 
-        if (!fs.existsSync(logs))
-            fs.mkdirSync(logs);
+        if (!existsSync(logs))
+            mkdirSync(logs);
     }
 }
 
-module.exports = VADB;
+export default VADB;

@@ -74,7 +74,7 @@ class Artist {
 
     static async Delete(id: number) {
         let artist = await this.FetchById(id);
-        
+
         if (artist === null)
             return null;
 

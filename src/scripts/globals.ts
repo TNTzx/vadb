@@ -5,12 +5,12 @@ import Logger from "../lib/util/Logger";
 
 const prisma = new PrismaClient({ log: [ { emit: "event", level: "query" }, { emit: "event", level: "info" }, { emit: "event", level: "warn" }, { emit: "event", level: "error" } ] });
 
-declare var glob: any;
-declare var Package: any;
-declare var Config: any;
-declare var Prisma: PrismaClient;
+var glob: any;
+var Package: any;
+var Config: any;
+var Prisma: PrismaClient;
 
-module.exports = () => {
+export default () => {
     global.glob = {};
     global.Package = require("../../package.json");
     global.Config = toml.parse(fs.readFileSync("../config.toml", "utf-8"));

@@ -1,11 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-const Logger = require("../util/Logger");
-const { graphqlHTTP } = require('express-graphql');
-const { buildSchema } = require('graphql');
+import fs from "fs"
+import path from "path";
+import Logger from "../util/Logger";
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema } from 'graphql';
 
-module.exports = (app, routerPath) => {
-    (function read(dirPath, router = "") {
+
+var test = (app, routerPath) => {
+    function read(dirPath, router = "") {
         let files = fs.readdirSync(dirPath);
 
         for (const file of files) {
@@ -22,7 +23,7 @@ module.exports = (app, routerPath) => {
 
                 app.use("/graphql" + route, async (req, res) => {
                     let isAdmin = await req.validate();
-                    
+
                     graphqlHTTP({
                         schema: schema,
                         rootValue: resolver,
@@ -34,5 +35,8 @@ module.exports = (app, routerPath) => {
                 Logger.Debug(`Registered graphql router: ${route}`);
             }
         }
-    })(routerPath);
+    };
+    read(routerPath);
 };
+
+export default test

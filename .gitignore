@@ -211,3 +211,5 @@ dist
 
 config.toml
 bin/
+
+test.ts
