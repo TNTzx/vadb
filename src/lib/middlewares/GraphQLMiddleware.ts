@@ -1,12 +1,13 @@
 import fs from "fs"
 import path from "path";
 import Logger from "../util/Logger";
+import express from "express";
 import { graphqlHTTP } from 'express-graphql';
 import { buildSchema } from 'graphql';
 
 
-var test = (app, routerPath) => {
-    function read(dirPath, router = "") {
+export default (app: express.Express, routerPath: string) => {
+    function read(dirPath: string, router: string = "") {
         let files = fs.readdirSync(dirPath);
 
         for (const file of files) {
@@ -21,16 +22,19 @@ var test = (app, routerPath) => {
                 let schema = buildSchema(routerType.schema);
                 let resolver = routerType.resolver;
 
-                app.use("/graphql" + route, async (req, res) => {
-                    let isAdmin = await req.validate();
+                app.use(
+                    "/graphql" + route,
+                    async (req, res) => {
+                        let isAdmin = await req.validate();
 
-                    graphqlHTTP({
-                        schema: schema,
-                        rootValue: resolver,
-                        graphiql: Config.development,
-                        context: { isAdmin }
-                    })(req, res);
-                });
+                        graphqlHTTP({
+                            schema: schema,
+                            rootValue: resolver,
+                            graphiql: global.Config.development,
+                            context: { isAdmin }
+                        })(req, res);
+                    }
+                );
 
                 Logger.Debug(`Registered graphql router: ${route}`);
             }
@@ -38,5 +42,3 @@ var test = (app, routerPath) => {
     };
     read(routerPath);
 };
-
-export default test

@@ -41,7 +41,7 @@ class Logger {
     }
 
     static #log(message, type, verbosity, colour) {
-        if (Config["log_level"].indexOf(verbosity.toLowerCase()) === -1)
+        if (global.Config["log_level"].indexOf(verbosity.toLowerCase()) === -1)
             return;
 
         this.#logToFile(`[${dateFormat(Date.now(), "HH:MM:ss")}] [${type}] [${verbosity}]: ${message}`)
@@ -49,7 +49,7 @@ class Logger {
     }
 
     static #logBackground(message, type, verbosity, colour, textColour) {
-        if (Config["log_level"].indexOf(verbosity.toLowerCase()) === -1)
+        if (global.Config["log_level"].indexOf(verbosity.toLowerCase()) === -1)
             return;
 
         this.#logToFile(`[${dateFormat(Date.now(), "HH:MM:ss")}] [${type}] [${verbosity}]: ${message}`)
@@ -88,7 +88,7 @@ class Logger {
     }
 
     // Copied from https://github.com/stefanpenner/get-caller-file
-    static #getCallerType(position = 2) {
+    static #getCallerType(position: number = 2) {
         if (position >= Error.stackTraceLimit) {
             throw new TypeError('getCallerFile(position) requires position be less then Error.stackTraceLimit but position was: `' + position + '` and Error.stackTraceLimit was: `' + Error.stackTraceLimit + '`');
         }
@@ -99,11 +99,14 @@ class Logger {
         Error.prepareStackTrace = oldPrepareStackTrace;
 
 
-        if (stack !== null && typeof stack === 'object') {
+        if (stack !== null) { // && typeof stack === 'object'
             // stack[0] holds this file
             // stack[1] holds where this function was called
             // stack[2] holds the file we're interested in
-            return stack[position] ? path.basename((stack[position]).getFileName()).slice(0, -3) : undefined;
+            return stack[position] ?
+                path.basename((stack[position]).getFileName()).slice(0, -3)
+                :
+                undefined;
         }
     }
 }

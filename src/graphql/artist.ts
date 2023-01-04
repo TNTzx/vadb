@@ -2,9 +2,11 @@ import Artist, { Status, Availability } from "../lib/structures/Artist";
 import { PrismaClient } from "@prisma/client";
 import Logger from "../lib/util/Logger";
 
+
+
 declare var Prisma: PrismaClient;
 
-module.exports.schema = `
+export var schema = `
 type Query {
     artist(id: Int!): Artist!
     artists(name: String): [Artist]

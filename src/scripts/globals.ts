@@ -3,12 +3,42 @@ import toml from "toml";
 import { PrismaClient } from "@prisma/client";
 import Logger from "../lib/util/Logger";
 
-const prisma = new PrismaClient({ log: [ { emit: "event", level: "query" }, { emit: "event", level: "info" }, { emit: "event", level: "warn" }, { emit: "event", level: "error" } ] });
 
-var glob: any;
-var Package: any;
-var Config: any;
-var Prisma: PrismaClient;
+
+declare global {
+    var Package: {
+            "name": string,
+            "version": string,
+            "description": string,
+            "main": string,
+            "scripts": {[scriptName: string]: string},
+            "keywords": [],
+            "author": string,
+            "license": string,
+            "dependencies": {[package: string]: string},
+            "devDependencies": {[devPackage: string]: string},
+            "repository": {
+                "type": string,
+                "url": string
+            },
+            "bugs": {
+                "url": string
+            },
+            "homepage": string
+        }
+}
+
+const prisma = new PrismaClient(
+    {
+        log: [
+            { emit: "event", level: "query" },
+            { emit: "event", level: "info" },
+            { emit: "event", level: "warn" },
+            { emit: "event", level: "error" }
+        ]
+    }
+);
+
 
 export default () => {
     global.glob = {};
@@ -28,7 +58,7 @@ function cleanup() {
 }
 
 function setupLogger() {
-    let isDebug = Config["log_level"].indexOf("debug") !== -1;
+    let isDebug = global.Config["log_level"].indexOf("debug") !== -1;
 
     if (isDebug) {
         prisma.$on("query", (e) => {
