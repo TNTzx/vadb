@@ -1,4 +1,5 @@
 import fs from "fs";
+import Path from "path";
 import toml from "toml";
 import prisma, { PrismaClient } from "@prisma/client";
 
@@ -80,7 +81,12 @@ function setupLogger() {
 export default () => {
     global.glob = {};
     global.Package = require("../package.json");
-    global.Config = toml.parse(fs.readFileSync("../config.toml", "utf-8"));
+    global.Config = toml.parse(
+        fs.readFileSync(
+            Path.join(__dirname, "..", "config.toml"),
+            "utf-8"
+        )
+    );
 
     global.Prisma = prismaClient;
 
