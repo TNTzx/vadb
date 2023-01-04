@@ -6,6 +6,19 @@ import { graphqlHTTP } from 'express-graphql';
 import { buildSchema } from 'graphql';
 
 
+
+export type ExtendedRes = express.Response & {
+    code: (code: number, data: any) => void;
+    message: (code: number, message: string) => void;
+};
+  
+export type ExtendedReq = express.Request & {
+    expect: (header: string, expected: string) => void;
+    validate: () => Promise<void>;
+};
+
+
+
 export default (app: express.Express, routerPath: string) => {
     function read(dirPath: string, router: string = "") {
         let files = fs.readdirSync(dirPath);
@@ -24,15 +37,17 @@ export default (app: express.Express, routerPath: string) => {
 
                 app.use(
                     "/graphql" + route,
-                    async (req, res) => {
+                    async (req: ExtendedReq, res: ExtendedRes) => {
                         let isAdmin = await req.validate();
 
-                        graphqlHTTP({
-                            schema: schema,
-                            rootValue: resolver,
-                            graphiql: global.Config.development,
-                            context: { isAdmin }
-                        })(req, res);
+                        graphqlHTTP(
+                            {
+                                schema: schema,
+                                rootValue: resolver,
+                                graphiql: global.Config.development,
+                                context: { isAdmin }
+                            }
+                        )(req, res);
                     }
                 );
 
@@ -40,5 +55,6 @@ export default (app: express.Express, routerPath: string) => {
             }
         }
     };
+
     read(routerPath);
 };

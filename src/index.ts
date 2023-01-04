@@ -3,7 +3,6 @@ import vadb from "./lib/vadb"
 
 
 
-
 globals()
 
 var full_app = new vadb();

@@ -1,19 +1,21 @@
-const fs = require("fs");
-const path = require("path");
-const Logger = require("../util/Logger");
+import { readdirSync, lstatSync } from "fs";
+import { join } from "path";
+import Logger from "../util/Logger";
 
-module.exports = (app, routerPath) => {
+
+
+export default (app, routerPath) => {
     (function read(dirPath, router = "") {
-        let files = fs.readdirSync(dirPath);
+        let files = readdirSync(dirPath);
 
         for (const file of files) {
-            let stat = fs.lstatSync(path.join(dirPath, file));
+            let stat = lstatSync(join(dirPath, file));
 
             if (stat.isDirectory()) {
-                read(path.join(dirPath, file), router + "/" + file);
+                read(join(dirPath, file), router + "/" + file);
             } else {
                 let route = `${router}/${file.slice(0, -3)}`;
-                let routerType = require(path.join(dirPath, file));
+                let routerType = require(join(dirPath, file));
                 let routerAliases = routerType.aliases || [];
                 let aliases = [route, ...routerAliases];
 
