@@ -1,11 +1,12 @@
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import express from "express";
+
 import Logger from "../util/Logger";
 
 
 
-export default (app: express.Express, routerPath: string) => {
+export default function routerMidware(app: express.Express, routerPath: string) {
     function read(dirPath: string, router: string = "") {
         let files = readdirSync(dirPath);
 

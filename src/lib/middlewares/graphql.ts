@@ -9,7 +9,7 @@ import { ExtendedReq, ExtendedRes } from "./override"
 
 
 
-export default function graphql_midware(app: Express.Express, routerPath: string) {
+export default function graphqlMidware(app: Express.Express, routerPath: string) {
     function read(dirPath: string, router: string = "") {
         let files = Fs.readdirSync(dirPath);
 

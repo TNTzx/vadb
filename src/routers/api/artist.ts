@@ -1,12 +1,16 @@
 import express from "express";
+
 import Logger from "../../lib/util/Logger";
+import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
+
 import Utilities from "../../lib/util/Utilities";
-import Artist from "../../lib/structures/Artist";
-import { Status, Availability } from "../../lib/structures/Artist";
+import Artist from "../../lib/structures/artist";
+import { Status, Availability } from "../../lib/structures/artist";
+
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: ExtendedReq, res: ExtendedRes) => {
     if (!await req.validate())
         return res.message(403, { message: "You do not have permissions to add an artist." });
 
@@ -46,7 +50,7 @@ router.post("/", async (req, res) => {
     })
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", async (req: ExtendedReq, res: ExtendedRes) => {
     if (!await req.validate())
         return res.message(403, { message: "You do not have permission to add an artist." });
 
@@ -86,4 +90,4 @@ router.patch("/:id", async (req, res) => {
     return res.code(200, changed)
 });
 
-module.exports = router;
+export default router;

@@ -1,11 +1,10 @@
 import Logger from "../util/Logger";
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 
 
 
 export type ExtendedReq = express.Request & {
-    expect: (header: string, expected: string) => void;
+    expect: (header: string, expected: string[]) => boolean;
     validate: () => Promise<boolean>;
 };
 
@@ -22,7 +21,7 @@ export type ExtendedRes = express.Response & {
 
 
 
-export default (req: ExtendedReq, res: ExtendedRes, next: express.NextFunction) => {
+export default function overrideMidware(req: ExtendedReq, res: ExtendedRes, next: express.NextFunction) {
     // RESPONSES //
     res.code = (code, data) => {
         return res.status(code).json(

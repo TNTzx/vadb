@@ -31,7 +31,7 @@ declare global {
     var Config: {
         port: number,
         development: boolean,
-        log_level: [string],
+        log_level: string[],
         auth_header: string
     }
     var Prisma: PrismaClient
