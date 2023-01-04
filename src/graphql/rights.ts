@@ -4,7 +4,8 @@ import Logger from "../lib/util/Logger";
 
 declare var Prisma: PrismaClient;
 
-module.exports.schema = `
+
+export var schema = `
 type Query {
     right(id: Int!): Right
     rights(artistId: Int!): [Right]

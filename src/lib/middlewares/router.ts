@@ -1,11 +1,12 @@
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
+import express from "express";
 import Logger from "../util/Logger";
 
 
 
-export default (app, routerPath) => {
-    (function read(dirPath, router = "") {
+export default (app: express.Express, routerPath: string) => {
+    function read(dirPath: string, router: string = "") {
         let files = readdirSync(dirPath);
 
         for (const file of files) {
@@ -27,5 +28,7 @@ export default (app, routerPath) => {
                 Logger.Debug(`Registered router: ${route} ${aliases.length > 0 ? `With ${aliases.length} aliases (${aliases.slice(1, aliases.length).join(", ")})` : ""}`);
             }
         }
-    })(routerPath);
+    };
+
+    read(routerPath);
 };

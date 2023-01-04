@@ -1,4 +1,4 @@
-import globals from "./scripts/globals"
+import globals from "./globals"
 import vadb from "./lib/vadb"
 
 

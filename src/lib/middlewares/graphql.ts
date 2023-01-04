@@ -1,38 +1,28 @@
-import fs from "fs"
-import path from "path";
+import Fs from "fs"
+import Path from "path";
+import Express from "express";
+import ExpressGraphQL from 'express-graphql';
+import GraphQL from 'graphql';
+
 import Logger from "../util/Logger";
-import express from "express";
-import { graphqlHTTP } from 'express-graphql';
-import { buildSchema } from 'graphql';
+import { ExtendedReq, ExtendedRes } from "./override"
 
 
 
-export type ExtendedRes = express.Response & {
-    code: (code: number, data: any) => void;
-    message: (code: number, message: string) => void;
-};
-  
-export type ExtendedReq = express.Request & {
-    expect: (header: string, expected: string) => void;
-    validate: () => Promise<void>;
-};
-
-
-
-export default (app: express.Express, routerPath: string) => {
+export default function graphql_midware(app: Express.Express, routerPath: string) {
     function read(dirPath: string, router: string = "") {
-        let files = fs.readdirSync(dirPath);
+        let files = Fs.readdirSync(dirPath);
 
         for (const file of files) {
-            let stat = fs.lstatSync(path.join(dirPath, file));
+            let stat = Fs.lstatSync(Path.join(dirPath, file));
 
             if (stat.isDirectory()) {
-                read(path.join(dirPath, file), router + "/" + file);
+                read(Path.join(dirPath, file), router + "/" + file);
             } else {
                 let route = `${router}/${file.slice(0, -3)}`;
-                let routerType = require(path.join(dirPath, file));
+                let routerType = require(Path.join(dirPath, file));
 
-                let schema = buildSchema(routerType.schema);
+                let schema = GraphQL.buildSchema(routerType.schema);
                 let resolver = routerType.resolver;
 
                 app.use(
@@ -40,7 +30,7 @@ export default (app: express.Express, routerPath: string) => {
                     async (req: ExtendedReq, res: ExtendedRes) => {
                         let isAdmin = await req.validate();
 
-                        graphqlHTTP(
+                        ExpressGraphQL.graphqlHTTP(
                             {
                                 schema: schema,
                                 rootValue: resolver,

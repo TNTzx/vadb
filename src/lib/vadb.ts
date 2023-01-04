@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from "fs";
-import express, { urlencoded, json } from "express";
+import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
@@ -32,8 +32,8 @@ class VADB {
 
         // MIDDLEWARE //
         Logger.Debug("Setting up middlewares.");
-        app.use(urlencoded({ extended: true }));
-        app.use(json());
+        app.use(express.urlencoded({ extended: true }));
+        app.use(express.json());
         app.use(cookieParser());
         app.use(cors());
         app.use(multer({

@@ -1,72 +1,89 @@
-// import Logger from "../util/Logger";
+import Logger from "../util/Logger";
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
 
 
-// export default (req, res, next) => {
-//     // RESPONSES //
-//     res.code = (code, data) => {
-//         return res.status(code).json({
-//             code,
-//             data
-//         });
-//     }
+export type ExtendedReq = express.Request & {
+    expect: (header: string, expected: string) => void;
+    validate: () => Promise<boolean>;
+};
 
-//     res.message = (code, message) => {
-//         return res.status(code).json({
-//             code,
-//             ...message
-//         });
-//     }
+export type ExtendedRes = express.Response & {
+    code: (code: number, data: any) => void;
+    message: (
+        code: number,
+        message: {
+            message: string,
+            data?: any
+        }
+    ) => void;
+};
 
 
-//     // REQUESTS //
-//     req.expect = (header, expected) => {
-//         let result = false;
 
-//         if (req.headers[header] === undefined)
-//         {
-//             Logger.Error(`No header with "${header}" exists.`);
-//             res.message(500, { message: "Something went wrong on the server." })
-//         }
+export default (req: ExtendedReq, res: ExtendedRes, next: express.NextFunction) => {
+    // RESPONSES //
+    res.code = (code, data) => {
+        return res.status(code).json(
+            {code, data}
+        );
+    }
 
-//         for (const exp of expected) {
-//             if (req.headers[header].includes(exp))
-//                 result = true;
-//         }
+    res.message = (code, message) => {
+        return res.status(code).json(
+            {code, message}
+        );
+    }
 
-//         if (!result) {
-//             res.message(400, {
-//                 message: "A header in the request was malformed and couldn't be processed.",
-//                 data: {
-//                     expected
-//                 }
-//             })
-//         }
 
-//         return result;
-//     }
+    // REQUESTS //
+    req.expect = (header, expected) => {
+        let result = false;
 
-//     req.validate = async () => {
-//         if (req.cookies.access) {
-//             let access = await Prisma.token.findFirst({
-//                 where: { token: req.cookies.access }
-//             });
+        if (req.headers[header] === undefined) {
+            Logger.Error(`No header with "${header}" exists.`);
+            res.message(500, {message: "Something went wrong on the server."})
+        }
 
-//             return access !== null;
-//         } else if (req.headers["authorization"]) {
-//             if (!req.headers["authorization"].startsWith(Config["auth_header"]))
-//                 return false;
+        for (const exp of expected) {
+            if (req.headers[header].includes(exp))
+                result = true;
+        }
 
-//             let token = req.headers["authorization"].slice(Config["auth_header"].length);
-//             let access = await Prisma.token.findFirst({
-//                 where: { token: token }
-//             });
+        if (!result) {
+            res.message(400, {
+                message: "A header in the request was malformed and couldn't be processed.",
+                data: {
+                    expected
+                }
+            })
+        }
 
-//             return access !== null;
-//         }
+        return result;
+    }
 
-//         return false;
-//     }
+    req.validate = async () => {
+        if (req.cookies.access) {
+            let access = await global.Prisma.token.findFirst({
+                where: { token: req.cookies.access }
+            });
 
-//     next();
-// }
+            return access !== null;
+        } else if (req.headers["authorization"]) {
+            if (!req.headers["authorization"].startsWith(Config["auth_header"]))
+                return false;
+
+            let token = req.headers["authorization"].slice(Config["auth_header"].length);
+            let access = await global.Prisma.token.findFirst({
+                where: { token: token }
+            });
+
+            return access !== null;
+        }
+
+        return false;
+    }
+
+    next();
+}
