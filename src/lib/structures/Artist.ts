@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import Logger from "../util/logger";
 
+
+
 declare var Prisma: PrismaClient;
 
 class Artist {
