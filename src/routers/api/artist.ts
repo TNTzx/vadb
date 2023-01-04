@@ -3,9 +3,21 @@ import express from "express";
 import Logger from "../../lib/util/logger";
 import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
 
-import Utilities from "../../lib/util/Utilities";
 import Artist from "../../lib/structures/artist";
 import { Status, Availability } from "../../lib/structures/artist";
+
+
+
+function validateFields(against = [], object) {
+    object.__missing = [];
+
+    for (const key of against) {
+        if (!object[key])
+            object.__missing.push(key);
+    }
+
+    return object.__missing.length === 0;
+}
 
 
 const router = express.Router();
@@ -20,7 +32,7 @@ router.post("/", async (req: ExtendedReq, res: ExtendedRes) => {
     if (!req.expect("content-type", ["application/x-www-form-urlencoded", "application/json", "multipart/form-data"]))
         return;
 
-    if (!Utilities.validate(["name", "status", "availability"], req.body)) {
+    if (!validateFields(["name", "status", "availability"], req.body)) {
         return res.message(400, {
             message: "A few fields were missing from this request.",
             data: {
