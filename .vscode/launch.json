@@ -5,10 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "npm start",
-            "name": "Run npm start",
+            "type": "node",
             "request": "launch",
-            "type": "node-terminal"
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/src/index.ts",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": ["${workspaceFolder}/out/**/*.js"]
         }
     ]
 }
