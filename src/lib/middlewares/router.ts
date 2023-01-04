@@ -2,7 +2,7 @@ import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import express from "express";
 
-import Logger from "../util/Logger";
+import Logger from "../util/logger";
 
 
 

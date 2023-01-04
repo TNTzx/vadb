@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import Logger from "../util/Logger";
+import Logger from "../util/logger";
 
 declare var Prisma: PrismaClient;
 

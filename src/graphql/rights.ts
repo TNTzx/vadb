@@ -1,6 +1,6 @@
 import Artist from "../lib/structures/artist";
 import { PrismaClient } from "@prisma/client";
-import Logger from "../lib/util/Logger";
+import Logger from "../lib/util/logger";
 
 declare var Prisma: PrismaClient;
 

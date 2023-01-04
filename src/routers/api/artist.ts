@@ -1,6 +1,6 @@
 import express from "express";
 
-import Logger from "../../lib/util/Logger";
+import Logger from "../../lib/util/logger";
 import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
 
 import Utilities from "../../lib/util/Utilities";

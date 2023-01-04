@@ -2,7 +2,7 @@ import fs from "fs";
 import toml from "toml";
 import prisma, { PrismaClient } from "@prisma/client";
 
-import Logger from "./lib/util/Logger";
+import Logger from "./lib/util/logger";
 
 
 

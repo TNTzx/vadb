@@ -3,7 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
-import Logger from "./util/Logger";
+import Logger from "./util/logger";
 import { join } from "path";
 
 
