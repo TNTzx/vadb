@@ -1,10 +1,15 @@
 import { existsSync, mkdirSync } from "fs";
+import { join } from "path";
+
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
+
 import Logger from "./util/logger";
-import { join } from "path";
+import OverrideMidware from "./middlewares/override";
+import GraphQLMidware from "./middlewares/graphql";
+import RouterMidware from "./middlewares/router";
 
 
 
@@ -45,12 +50,12 @@ class VADB {
         // CUSTOM MIDDLEWARES //
         Logger.Debug("Setting up custom middlewares.");
         // rate limit
-        app.use("*", require("./middlewares/OverrideMiddleware"));
+        app.use("*", OverrideMidware);
 
         // LOADERS //
         Logger.Debug("Kick starting loaders");
-        require("./middlewares/RouterMiddleware")(app, join(__dirname, "../", "routers"));
-        require("./middlewares/GraphQLMiddleware")(app, join(__dirname, "../", "graphql"));
+        GraphQLMidware(app, join(__dirname, "../", "routers"));
+        RouterMidware(app, join(__dirname, "../", "graphql"));
 
         // SETTINGS //
         app.set("json-spaces", 4);

@@ -79,7 +79,7 @@ function setupLogger() {
 
 export default () => {
     global.glob = {};
-    global.Package = require("../../package.json");
+    global.Package = require("../package.json");
     global.Config = toml.parse(fs.readFileSync("../config.toml", "utf-8"));
 
     global.Prisma = prismaClient;
