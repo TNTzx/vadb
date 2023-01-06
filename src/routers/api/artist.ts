@@ -1,4 +1,4 @@
-import express from "express";
+import Express from "express";
 
 import Logger from "../../lib/util/logger";
 import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
@@ -20,7 +20,7 @@ function validateFields(against = [], object) {
 }
 
 
-const router = express.Router();
+const router = Express.Router();
 
 router.post("/", async (req: ExtendedReq, res: ExtendedRes) => {
     if (!await req.validate())
@@ -101,5 +101,6 @@ router.patch("/:id", async (req: ExtendedReq, res: ExtendedRes) => {
 
     return res.code(200, changed)
 });
+
 
 export default router;

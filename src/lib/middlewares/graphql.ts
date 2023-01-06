@@ -2,14 +2,13 @@ import Fs from "fs"
 import Path from "path";
 import Express from "express";
 import ExpressGraphQL from 'express-graphql';
-import GraphQL from 'graphql';
 
 import Logger from "../util/logger";
 import { ExtendedReq, ExtendedRes } from "./override"
 
 
 
-export default function graphqlMidware(app: Express.Express, routerPath: string) {
+export default function graphqlMidware(app: Express.Express, routersPath: string) {
     function read(dirPath: string, router: string = "") {
         let files = Fs.readdirSync(dirPath);
 
@@ -22,7 +21,7 @@ export default function graphqlMidware(app: Express.Express, routerPath: string)
                 let route = `${router}/${file.slice(0, -3)}`;
                 let routerType = require(Path.join(dirPath, file));
 
-                let schema = GraphQL.buildSchema(routerType.schema);
+                let schema = global.GraphQL.buildSchema(routerType.schema);
                 let resolver = routerType.resolver;
 
                 app.use(
@@ -46,5 +45,5 @@ export default function graphqlMidware(app: Express.Express, routerPath: string)
         }
     };
 
-    read(routerPath);
+    read(routersPath);
 };
