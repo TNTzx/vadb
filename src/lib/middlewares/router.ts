@@ -22,10 +22,8 @@ export default function routerMidware(app: Express.Express, routerPath: string) 
                 let aliases = [route, ...routerAliases];
 
                 for (const alias of aliases) {
-                    app.use(alias, routerType.router);
+                    app.use(alias, routerType);
                 }
-
-                app.use(route, routerType)
                 Logger.Debug(`Registered router: ${route} ${aliases.length > 0 ? `With ${aliases.length} aliases (${aliases.slice(1, aliases.length).join(", ")})` : ""}`);
             }
         }

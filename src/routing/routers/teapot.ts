@@ -1,15 +1,16 @@
-import { RouterInfo } from "../routerClass"
+import { RouterInfo } from "../routerInfo"
 import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
 
 
+export default () => {
+    var routerInfo = new RouterInfo("/teapot", ["/test", "/cock"]);
 
-const routerInfo = new RouterInfo("/teapot", ["/test", "/cock"]);
+    routerInfo.router.all(
+        "/",
+        (req: ExtendedReq, res: ExtendedRes) => {
+            return res.message(418, {message: "I'm a teapot! However, I cannot brew you coffee."});
+        }
+    );
 
-routerInfo.router.all(
-    "/",
-    (req: ExtendedReq, res: ExtendedRes) => {
-        return res.message(418, {message: "I'm a teapot! However, I cannot brew you coffee."});
-    }
-);
-
-export default routerInfo;
+    return routerInfo
+}
