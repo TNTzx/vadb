@@ -208,7 +208,7 @@ dist
 
 
 ### User ignores
-
+.env
 config.toml
 bin/
 playground/

@@ -17,7 +17,7 @@ class Artist {
         });
     }
 
-    static async FetchByName(name) {
+    static async FetchByName(name: string) {
         let safe = this.GetSafeName(name);
 
         return await Prisma.artist.findFirst({
@@ -25,6 +25,7 @@ class Artist {
             include: { rights: true, socials: true }
         });
     }
+
 
     static async Create(data) {
         data.safeName = this.GetSafeName(data.name);
@@ -55,9 +56,8 @@ class Artist {
         } catch (e) {
             Logger.Error(e);
         }
-
-        return null;
     }
+
 
     static async Update(id: number, data) {
         if (data.name) {
@@ -73,6 +73,7 @@ class Artist {
             data
         })
     }
+
 
     static async Delete(id: number) {
         let artist = await this.FetchById(id);
@@ -97,6 +98,7 @@ class Artist {
         return name.trim().replaceAll(" ", "_").toLowerCase();
     }
 }
+
 
 export default Artist;
 
