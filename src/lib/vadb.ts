@@ -54,7 +54,7 @@ class VADB {
 
         // LOADERS //
         Logger.Debug("Kick starting loaders");
-        GraphQLMidware(app, join(__dirname, "../", "routers"));
+        // TODO GraphQLMidware(app, join(__dirname, "../", "routers"));
         RouterMidware(app, join(__dirname, "../", "graphql"));
 
         // SETTINGS //

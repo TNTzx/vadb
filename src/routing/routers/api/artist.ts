@@ -1,10 +1,10 @@
 import Express from "express";
 
-import Logger from "../../lib/util/logger";
-import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
+import Logger from "../../../lib/util/logger";
+import { ExtendedReq, ExtendedRes } from "../../../lib/middlewares/override";
 
-import Artist from "../../lib/structures/artist";
-import { Status, Availability } from "../../lib/structures/artist";
+import Artist from "../../../lib/structures/artist";
+import { Status, Availability } from "../../../lib/structures/artist";
 
 
 
