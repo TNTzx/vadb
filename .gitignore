@@ -211,5 +211,4 @@ dist
 
 config.toml
 bin/
-
-test.ts
+playground/
