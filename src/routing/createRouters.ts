@@ -3,7 +3,7 @@ import artist from "./routers/artist";
 
 
 
-export default function makeRouterInfos() {
+export default () => {
     return [
         teapot(),
         artist()

@@ -3,13 +3,13 @@ import Express from "express"
 
 
 export class RouterInfo {
-    siteBasePath: string;
+    baseSitePath: string;
     aliases: string[];
     router: Express.Router;
     schema: string;
 
-    constructor(siteBasePath: string, aliases: string[] = [], router: Express.Router = Express.Router(), schema: string = "") {
-        this.siteBasePath = siteBasePath;
+    constructor(baseSitePath: string, aliases: string[] = [], router: Express.Router = Express.Router(), schema: string = "") {
+        this.baseSitePath = baseSitePath;
         this.aliases = aliases;
         this.router = router;
         this.schema = schema;
@@ -20,6 +20,6 @@ export class RouterInfo {
      * Gets all the names that the router has.
      */
     getNames() {
-        return [this.router, ...this.aliases]
+        return [this.baseSitePath, ...this.aliases]
     }
 }
