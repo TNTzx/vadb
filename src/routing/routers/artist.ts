@@ -1,4 +1,4 @@
-import Logger from "../../lib/util/logger";
+import Logger from "../../lib/logger";
 import { RouterInfo } from "../routerInfo";
 import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
 

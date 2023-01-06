@@ -3,7 +3,7 @@ import Path from "path";
 import toml from "toml";
 import prisma, { PrismaClient } from "@prisma/client";
 
-import Logger from "./lib/util/logger";
+import Logger from "./lib/logger";
 
 
 

@@ -1,7 +1,7 @@
 import Express from "express";
 import CreateRouters from "../../routing/createRouters";
 
-import Logger from "../util/logger";
+import Logger from "../logger";
 
 
 

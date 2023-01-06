@@ -1,6 +1,6 @@
 import Artist, { Status, Availability } from "../lib/structures/artist";
 import { PrismaClient } from "@prisma/client";
-import Logger from "../lib/util/logger";
+import Logger from "../lib/logger";
 
 
 

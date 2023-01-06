@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import multer from "multer";
 
-import Logger from "./util/logger";
+import Logger from "./logger";
 import OverrideMidware from "./middlewares/override";
 import GraphQLMidware from "./middlewares/graphql";
 import RouterMidware from "./middlewares/router";
@@ -55,7 +55,7 @@ class VADB {
         // LOADERS //
         Logger.Debug("Kick starting loaders");
         // TODO GraphQLMidware(app, join(__dirname, "../", "routers"));
-        RouterMidware(app, join(__dirname, "../", "graphql"));
+        RouterMidware(app);
 
         // SETTINGS //
         app.set("json-spaces", 4);

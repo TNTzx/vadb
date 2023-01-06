@@ -3,7 +3,7 @@ import Path from "path";
 import Express from "express";
 import ExpressGraphQL from 'express-graphql';
 
-import Logger from "../util/logger";
+import Logger from "../logger";
 import { ExtendedReq, ExtendedRes } from "./override"
 
 
