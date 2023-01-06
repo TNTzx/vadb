@@ -21,6 +21,25 @@
                 "${workspaceFolder}/**/*.js",
                 "!**/node_modules/**"
             ]
-        }
+        },
+
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Testcode",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/playground/testcode.ts",
+            "runtimeArgs": [
+                "-r", "ts-node/register",
+                "-r", "tsconfig-paths/register"
+            ],
+            "console": "integratedTerminal",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js",
+                "!**/node_modules/**"
+            ]
+        },
     ]
 }
