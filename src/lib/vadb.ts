@@ -11,6 +11,8 @@ import OverrideMidware from "./middlewares/express";
 import GraphQLMidware from "./middlewares/graphql";
 import RouterMidware from "./middlewares/router";
 
+import createRouters from "../routing/createRouters";
+
 
 
 class VADB {
@@ -56,6 +58,7 @@ class VADB {
         Logger.Debug("Kick starting loaders");
         // TODO GraphQLMidware(app, join(__dirname, "../", "routers"));
         RouterMidware(app);
+
 
         // SETTINGS //
         app.set("json-spaces", 4);
