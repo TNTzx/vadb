@@ -29,7 +29,6 @@ class Artist {
 
     static async Create(data) {
         data.safeName = this.GetSafeName(data.name);
-        delete data.__missing;
 
         let rights = data.rights;
         let socials = data.socials;
