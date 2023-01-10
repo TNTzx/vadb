@@ -7,62 +7,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
 model Artist {
-  id           Int          @id @default(autoincrement())
-  name         String
-  safeName     String?
-  aliases      String?
-  description  String?
-  notes        String?
-  genre        String?
-  tracks       Int          @default(0)
-  status       Status       @default(NONE)
-  availability Availability @default(NONE)
-  addedAt      DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  rights       Right[]
-  socials      Social[]
+    id           Int          @id @default(autoincrement())
+    name         String
+    safeName     String?
+    aliases      Alias[]
+    description  String?
+    notes        String?
+    genre        String?
+    tracks       Int          @default(0)
+    status       Status       @default(NONE)
+    availability Availability @default(NONE)
+    addedAt      DateTime     @default(now())
+    updatedAt    DateTime     @updatedAt
+
+    rights  Right[]
+    socials Social[]
 }
 
-model Right {
-  id       Int     @id @default(autoincrement())
-  name     String
-  value    Boolean
-  artistId Int
-  artist   Artist  @relation(fields: [artistId], references: [id])
+model Alias {
+    id       Int     @id @default(autoincrement())
+    name     String
+    Artist   Artist? @relation(fields: [artistId], references: [id])
+    artistId Int?
+}
 
-  @@index([artistId], map: "Right_artistId_fkey")
+
+model Right {
+    id    Int     @id @default(autoincrement())
+    name  String
+    value Boolean
+
+    artist   Artist @relation(fields: [artistId], references: [id])
+    artistId Int
 }
 
 model Social {
-  id       Int     @id @default(autoincrement())
-  link     String
-  type     String
-  icon     String?
-  artistId Int
-  artist   Artist  @relation(fields: [artistId], references: [id])
+    id   Int     @id @default(autoincrement())
+    link String
+    type String
+    icon String?
 
-  @@index([artistId], map: "Social_artistId_fkey")
+    artist   Artist @relation(fields: [artistId], references: [id])
+    artistId Int
 }
+
+
+enum Status {
+    NONE
+    COMPLETED
+    NO_CONTACT
+    PENDING
+    REQUESTED
+}
+
+enum Availability {
+    NONE
+    VERIFIED
+    DISALLOWED
+    CONTACT_REQUIRED
+    VARIES
+}
+
+
 
 model Token {
   id         Int    @id @default(autoincrement())
   token      String
   assignedIp String
-}
-
-enum Status {
-  NONE
-  COMPLETED
-  NO_CONTACT
-  PENDING
-  REQUESTED
-}
-
-enum Availability {
-  NONE
-  VERIFIED
-  DISALLOWED
-  CONTACT_REQUIRED
-  VARIES
 }
