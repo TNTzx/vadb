@@ -13,7 +13,7 @@ model Artist {
     id           Int          @id @default(autoincrement())
     name         String
     safeName     String?
-    aliases      Alias[]
+    aliases      String?
     description  String?
     notes        String?
     genre        String?
@@ -27,12 +27,12 @@ model Artist {
     socials Social[]
 }
 
-model Alias {
-    id       Int     @id @default(autoincrement())
-    name     String
-    Artist   Artist? @relation(fields: [artistId], references: [id])
-    artistId Int?
-}
+// model Alias {
+//     id       Int     @id @default(autoincrement())
+//     name     String
+//     Artist   Artist? @relation(fields: [artistId], references: [id])
+//     artistId Int?
+// }
 
 
 model Right {
