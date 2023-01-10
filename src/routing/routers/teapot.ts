@@ -1,5 +1,5 @@
 import { RouterInfo } from "../routerInfo"
-import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
+import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/express";
 
 
 export default () => {

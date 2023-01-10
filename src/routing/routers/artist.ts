@@ -1,6 +1,6 @@
 import Logger from "../../lib/logger";
 import { RouterInfo } from "../routerInfo";
-import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/override";
+import { ExtendedReq, ExtendedRes } from "../../lib/middlewares/express";
 
 import Artist from "../../lib/structures/artist";
 import { Status, Availability } from "../../lib/structures/artist";

@@ -4,7 +4,7 @@ import Express from "express";
 import ExpressGraphQL from 'express-graphql';
 
 import Logger from "../logger";
-import { ExtendedReq, ExtendedRes } from "./override"
+import { ExtendedReq, ExtendedRes } from "./express"
 
 
 

@@ -12,16 +12,14 @@ export type ExtendedRes = express.Response & {
     code: (code: number, data: any) => void;
     message: (
         code: number,
-        message: {
-            message: string,
-            data?: any
-        }
+        message: string,
+        data?: any
     ) => void;
 };
 
 
 
-export default function overrideMidware(req: ExtendedReq, res: ExtendedRes, next: express.NextFunction) {
+export default function expressMidware(req: ExtendedReq, res: ExtendedRes, next: express.NextFunction) {
     // RESPONSES //
     res.code = (code, data) => {
         return res.status(code).json(
@@ -29,9 +27,9 @@ export default function overrideMidware(req: ExtendedReq, res: ExtendedRes, next
         );
     }
 
-    res.message = (code, message) => {
+    res.message = (code, message, data?) => {
         return res.status(code).json(
-            {code, message}
+            data ? {code, message, data} : {code, message}
         );
     }
 
@@ -42,7 +40,7 @@ export default function overrideMidware(req: ExtendedReq, res: ExtendedRes, next
 
         if (req.headers[header] === undefined) {
             Logger.Error(`No header with "${header}" exists.`);
-            res.message(500, {message: "Something went wrong on the server."})
+            res.message(500, "Something went wrong on the server.")
         }
 
         for (const exp of expected) {
@@ -51,12 +49,7 @@ export default function overrideMidware(req: ExtendedReq, res: ExtendedRes, next
         }
 
         if (!result) {
-            res.message(400, {
-                message: "A header in the request was malformed and couldn't be processed.",
-                data: {
-                    expected
-                }
-            })
+            res.message(400, "A header in the request was malformed and couldn't be processed.", expected)
         }
 
         return result;
@@ -73,7 +66,7 @@ export default function overrideMidware(req: ExtendedReq, res: ExtendedRes, next
             if (!req.headers["authorization"].startsWith(Config["auth_header"]))
                 return false;
 
-            let token = req.headers["authorization"].slice(Config["auth_header"].length);
+            let token = req.headers["authorization"].slice(Config["auth_header"].length + 1);
             let access = await global.Prisma.token.findFirst({
                 where: { token: token }
             });

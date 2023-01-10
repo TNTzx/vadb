@@ -7,7 +7,7 @@ import cors from "cors";
 import multer from "multer";
 
 import Logger from "./logger";
-import OverrideMidware from "./middlewares/override";
+import OverrideMidware from "./middlewares/express";
 import GraphQLMidware from "./middlewares/graphql";
 import RouterMidware from "./middlewares/router";
 
