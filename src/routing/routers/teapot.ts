@@ -8,7 +8,7 @@ export default () => {
     routerInfo.router.all(
         "/",
         (req: ExtendedReq, res: ExtendedRes) => {
-            return res.message(418, {message: "I'm a teapot! However, I cannot brew you coffee."});
+            return res.message(418, "I'm a teapot! However, I cannot brew you coffee.");
         }
     );
 
