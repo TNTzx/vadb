@@ -27,7 +27,7 @@ class VADB {
         VADB.#setup(VADB.app);
     }
 
-    Start(port) {
+    Start(port: number) {
         VADB.app.listen(port, () => {
             Logger.Info(`App listening on ${port}`);
         });

@@ -2,14 +2,19 @@
   "name": "vadb",
   "version": "1.0.0",
   "description": "A verified artist database for use in alliance with Project Arrhythmia",
-  "main": "index.js",
+  "main": "index.ts",
+
+  "type": "module",
+
   "scripts": {
     "prismix": "npx prismix && prisma format",
     "start": "tsc && cd bin/ && node index.js"
   },
+
   "keywords": [],
   "author": "Nora",
   "license": "MIT",
+
   "dependencies": {
     "@prisma/client": "^4.9.0-dev.43",
     "chalk": "^4.1.1",
@@ -33,12 +38,15 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TNTzx/vadb.git"
   },
+
   "bugs": {
     "url": "https://github.com/TNTzx/vadb/issues"
   },
+
   "homepage": "https://github.com/TNTzx/vadb#readme"
 }
