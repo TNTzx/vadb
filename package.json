@@ -2,7 +2,7 @@
   "name": "vadb",
   "version": "1.0.0",
   "description": "A verified artist database for use in alliance with Project Arrhythmia",
-  "main": "index.ts",
+  "main": "index.js",
 
   "type": "module",
 
