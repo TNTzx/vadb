@@ -4,8 +4,6 @@
   "description": "A verified artist database for use in alliance with Project Arrhythmia",
   "main": "index.js",
 
-  "type": "module",
-
   "scripts": {
     "prismix": "npx prismix && prisma format",
     "start": "tsc && cd bin/ && node index.js"
