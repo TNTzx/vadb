@@ -1,6 +1,7 @@
 /** @module Artist Module containing structures regarding the artist. */
 
 
+import { Availability } from "@prisma/client";
 import * as tag from "./tag"
 
 
@@ -10,6 +11,12 @@ export class Song {
     title: string;
     aliases: string[];
     audioPath: string;
+
+    constructor(title: string = "Unnamed Song", aliases: string[] = [], audioPath: string) {
+        this.title = title
+        this.aliases = aliases
+        this.audioPath = audioPath
+    }
 }
 
 
@@ -17,18 +24,18 @@ export class Song {
 /** Contains additional metadata for the artist. */
 export class ArtistMetadata {
     aliases: string[];
-    description?: string;
-    notes?: string;
+    description: string;
+    notes: string;
 
-    genre?: string;
+    genre: string;
     songs: Song[];
     socials: string[];
 
     constructor(
         aliases: string[] = [],
-        description?: string,
-        notes?: string,
-        genre?: string,
+        description: string = "",
+        notes: string = "",
+        genre: string = "",
         songs: Song[] = [],
         socials: string[] = []
     ) {
@@ -61,7 +68,7 @@ export class Right {
     identifier: string;
     isAllowed: boolean;
 
-    constructor(identifier: string, isAllowed: boolean) {
+    constructor(identifier: string = "Unknown", isAllowed: boolean = true) {
         this.identifier = identifier;
         this.isAllowed = isAllowed;
     };
@@ -73,19 +80,19 @@ export class Artist {
     id: number;
     name: string;
     metadata: ArtistMetadata;
-    availability: string;
+    availability: ArtistAvailabilityTag;
     rights: Right[];
-    addedAt?: Date;
-    updatedAt?: Date;
+    addedAt: Date;
+    updatedAt: Date;
 
     constructor(
         id: number,
-        name: string,
-        metadata: ArtistMetadata,
-        availability: string,
-        rights: Right[],
-        addedAt?: Date,
-        updatedAt?: Date
+        name: string = "Unnamed Artist",
+        metadata: ArtistMetadata = new ArtistMetadata(),
+        availability: ArtistAvailabilityTag = ArtistAvailabilityValues.UNKNOWN,
+        rights: Right[] = [],
+        addedAt: Date = new Date(),
+        updatedAt: Date = new Date()
     ) {
         this.id = id;
         this.name = name;
