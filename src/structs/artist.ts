@@ -1,3 +1,10 @@
+/** @module Artist Module containing structures regarding the artist. */
+
+
+import * as tag from "./tag"
+
+
+
 /** Represents an allowed song that can be used for Project Arrhythmia. */
 export class Song {
     title: string;
@@ -35,13 +42,15 @@ export class ArtistMetadata {
 }
 
 
+/** Represents the artist's availability. */
+export class ArtistAvailabilityTag extends tag.Tag {}
 
 /** Contains all the possible availability states. */
-export const AvailabilityValues = Object.freeze({
-    ALLOWED: "Allowed",
-    DISALLOWED: "Disallowed",
-    VARIES: "Verified",
-    UNKNOWN: "Unknown",
+export const ArtistAvailabilityValues = Object.freeze({
+    ALLOWED: new ArtistAvailabilityTag("Allowed", "The artist allows most of their songs for use."),
+    DISALLOWED: new ArtistAvailabilityTag("Disallowed", "The artist disallows all of their songs for use."),
+    VARIES: new ArtistAvailabilityTag("Varies", "The artist specifies certain rules for allowing or disallowing specific songs."),
+    UNKNOWN: new ArtistAvailabilityTag("Unknown", "The artist's availability is not known."),
 });
 
 
@@ -62,13 +71,10 @@ export class Right {
 
 export class Artist {
     id: number;
-
     name: string;
     metadata: ArtistMetadata;
-
     availability: string;
     rights: Right[];
-
     addedAt?: Date;
     updatedAt?: Date;
 

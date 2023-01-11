@@ -10,7 +10,7 @@ ContactStatus {
 }
 
 
-// artist's status in the approval process
+/** Represents the artist's status in the approval process */
 ApprovalStatus {
     PENDING, // pending approval by mods
     COMPLETED // completed approval process

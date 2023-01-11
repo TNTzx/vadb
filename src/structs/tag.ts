@@ -1,4 +1,4 @@
-export default class Tag {
+export class Tag {
     tag: string
     description: string
 
