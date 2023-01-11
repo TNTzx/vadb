@@ -10,71 +10,91 @@ datasource db {
 
 
 model Artist {
-    id           Int          @id @default(autoincrement())
-    name         String
-    safeName     String?
-    aliases      String?
-    description  String?
-    notes        String?
-    genre        String?
-    tracks       Int          @default(0)
-    status       Status       @default(NONE)
-    availability Availability @default(NONE)
-    addedAt      DateTime     @default(now())
-    updatedAt    DateTime     @updatedAt
+  id           Int             @id @default(autoincrement())
+  name         String
+  metadata     ArtistMetadata?
+  availability Availability
+  rights Right[]
 
-    rights  Right[]
-    socials Social[]
+  addedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
-// model Alias {
-//     id       Int     @id @default(autoincrement())
-//     name     String
-//     Artist   Artist? @relation(fields: [artistId], references: [id])
-//     artistId Int?
-// }
 
+model ArtistMetadata {
+  id       Int    @id @default(autoincrement())
+  artist   Artist @relation(fields: [artistId], references: [id])
+  artistId Int    @unique
 
-model Right {
-    id    Int     @id @default(autoincrement())
-    name  String
-    value Boolean
+  artistAliases ArtistAlias[]
+  description   String
+  notes         String
+  genre         String
+  songs         Song[]
+  socials       Social[]
+}
 
-    artist   Artist @relation(fields: [artistId], references: [id])
-    artistId Int
+model ArtistAlias {
+  id Int @id @default(autoincrement())
+
+  artistMetadata ArtistMetadata @relation(fields: [artistId], references: [artistId])
+  artistId       Int
+
+  name String
+}
+
+model Song {
+  id Int @id @default(autoincrement())
+
+  artistMetadata ArtistMetadata @relation(fields: [artistId], references: [artistId])
+  artistId       Int
+
+  title       String
+  songAliases SongAlias[]
+  audioPath   String
+}
+
+model SongAlias {
+  id Int @id @default(autoincrement())
+
+  song   Song @relation(fields: [songId], references: [id])
+  songId Int
+
+  name String
 }
 
 model Social {
-    id   Int     @id @default(autoincrement())
-    link String
-    type String
-    icon String?
+  id Int @id @default(autoincrement())
 
-    artist   Artist @relation(fields: [artistId], references: [id])
-    artistId Int
+  artistMetadata ArtistMetadata @relation(fields: [artistId], references: [artistId])
+  artistId       Int
+
+  link String
 }
 
 
-enum Status {
-    NONE
-    COMPLETED
-    NO_CONTACT
-    PENDING
-    REQUESTED
-}
 
 enum Availability {
-    NONE
-    VERIFIED
-    DISALLOWED
-    CONTACT_REQUIRED
-    VARIES
+  ALLOWED
+  DISALLOWED
+  VARIES
+  UNKNOWN
+}
+
+
+model Right {
+  id Int @id @default(autoincrement())
+
+  artist Artist @relation(fields: [artistId], references: [id])
+  artistId Int
+
+  identifier String
+  isAllowed Boolean
 }
 
 
 
 model Token {
-  id         Int    @id @default(autoincrement())
-  token      String
-  assignedIp String
+  id    Int    @id @default(autoincrement())
+  token String
 }

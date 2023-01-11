@@ -1,7 +1,6 @@
 /** @module Artist Module containing structures regarding the artist. */
 
 
-import { Availability } from "@prisma/client";
 import * as tag from "./tag"
 
 
