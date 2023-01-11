@@ -3,44 +3,32 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-
 
 model Artist {
   id           Int             @id @default(autoincrement())
   name         String
   metadata     ArtistMetadata?
   availability Availability
-  rights Right[]
+  rights       Right[]
 
-  addedAt DateTime
+  addedAt   DateTime
   updatedAt DateTime @updatedAt
 }
-
 
 model ArtistMetadata {
   id       Int    @id @default(autoincrement())
   artist   Artist @relation(fields: [artistId], references: [id])
   artistId Int    @unique
 
-  artistAliases ArtistAlias[]
+  artistAliases String[]
   description   String
   notes         String
   genre         String
   songs         Song[]
   socials       Social[]
-}
-
-model ArtistAlias {
-  id Int @id @default(autoincrement())
-
-  artistMetadata ArtistMetadata @relation(fields: [artistId], references: [artistId])
-  artistId       Int
-
-  name String
 }
 
 model Song {
@@ -49,18 +37,9 @@ model Song {
   artistMetadata ArtistMetadata @relation(fields: [artistId], references: [artistId])
   artistId       Int
 
-  title       String
-  songAliases SongAlias[]
-  audioPath   String
-}
-
-model SongAlias {
-  id Int @id @default(autoincrement())
-
-  song   Song @relation(fields: [songId], references: [id])
-  songId Int
-
-  name String
+  title          String
+  romanizedTitle String
+  audioPath      String
 }
 
 model Social {
@@ -72,8 +51,6 @@ model Social {
   link String
 }
 
-
-
 enum Availability {
   ALLOWED
   DISALLOWED
@@ -81,18 +58,15 @@ enum Availability {
   UNKNOWN
 }
 
-
 model Right {
   id Int @id @default(autoincrement())
 
-  artist Artist @relation(fields: [artistId], references: [id])
+  artist   Artist @relation(fields: [artistId], references: [id])
   artistId Int
 
   identifier String
-  isAllowed Boolean
+  isAllowed  Boolean
 }
-
-
 
 model Token {
   id    Int    @id @default(autoincrement())
