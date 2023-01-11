@@ -1,0 +1,1 @@
+/** @module VADBApp Contains the application. */
