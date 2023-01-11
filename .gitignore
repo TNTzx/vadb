@@ -212,3 +212,4 @@ dist
 config.toml
 bin/
 playground/
+src/old_code/
