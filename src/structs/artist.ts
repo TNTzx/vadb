@@ -7,14 +7,14 @@ import * as tag from "./tag"
 
 /** Represents an allowed song that can be used for Project Arrhythmia. */
 export class Song {
-    title: string;
-    aliases: string[];
     audioPath: string;
+    title: string;
+    romanizedTitle?: string;
 
-    constructor(title: string = "Unnamed Song", aliases: string[] = [], audioPath: string) {
-        this.title = title
-        this.aliases = aliases
+    constructor(audioPath: string, title: string = "Unnamed Song", romanizedTitle?: string) {
         this.audioPath = audioPath
+        this.title = title
+        this.romanizedTitle = romanizedTitle
     }
 }
 
