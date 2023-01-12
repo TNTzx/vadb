@@ -22,7 +22,7 @@ export class Song {
         this.romanizedTitle = romanizedTitle
     }
 
-    toData(): SongDatatype {
+    toPrismaData(): SongDatatype {
         return {
             audioPath: this.audioPath,
             title: this.title,
@@ -30,14 +30,14 @@ export class Song {
         }
     }
 
-    static fromData(data: SongDatatype) {
+    static fromPrismaData(data: SongDatatype) {
         return new this(data.audioPath, data.title, data.romanizedTitle);
     }
 }
 
 
 
-export type ArtistMetadataDatatype = {
+export type ArtistMetadataPDT = {
     aliases: string[],
     description: string,
     notes: string,
@@ -72,24 +72,24 @@ export class ArtistMetadata {
     }
 
 
-    toData(): ArtistMetadataDatatype {
+    toPrismaData(): ArtistMetadataPDT {
         return {
             aliases: this.aliases,
             description: this.description,
             notes: this.notes,
             genre: this.genre,
-            songs: this.songs.map((song) => song.toData()),
+            songs: this.songs.map((song) => song.toPrismaData()),
             socials: this.socials
         }
     }
 
-    static fromData(data: ArtistMetadataDatatype) {
+    static fromPrismaData(data: ArtistMetadataPDT) {
         return new this(
             data.aliases,
             data.description,
             data.notes,
             data.genre,
-            data.songs.map((songData) => Song.fromData(songData)),
+            data.songs.map((songData) => Song.fromPrismaData(songData)),
             data.socials
         );
     }
@@ -101,11 +101,11 @@ export class ArtistMetadata {
 export class ArtistAvailabilityTag extends tag.Tag {}
 
 /** Contains all the possible availability states. */
-export const ArtistAvailabilityValues = Object.freeze({
-    ALLOWED: new ArtistAvailabilityTag("ALLOWED", "The artist allows most of their songs for use."),
-    DISALLOWED: new ArtistAvailabilityTag("DISALLOWED", "The artist disallows all of their songs for use."),
-    VARIES: new ArtistAvailabilityTag("VARIES", "The artist specifies certain rules for allowing or disallowing specific songs."),
-    UNKNOWN: new ArtistAvailabilityTag("UNKNOWN", "The artist's availability is not known."),
+export const ArtistAvailabilityValues = tag.getTagList({
+    "ALLOWED": new ArtistAvailabilityTag("ALLOWED", "The artist allows most of their songs for use."),
+    "DISALLOWED": new ArtistAvailabilityTag("DISALLOWED", "The artist disallows all of their songs for use."),
+    "VARIES": new ArtistAvailabilityTag("VARIES", "The artist specifies certain rules for allowing or disallowing specific songs."),
+    "UNKNOWN": new ArtistAvailabilityTag("UNKNOWN", "The artist's availability is not known."),
 });
 
 
@@ -122,22 +122,22 @@ export class Right {
     };
 
 
-    toData(): RightDatatype {
+    toPrismaData(): RightDatatype {
         return {identifier: this.identifier, isAllowed: this.isAllowed}
     }
 
-    static fromData(data: RightDatatype) {
+    static fromPrismaData(data: RightDatatype) {
         return new this(data.identifier, data.isAllowed);
     }
 };
 
 
 
-export type ArtistDatatype = {
+export type ArtistPDT = {
     id: number,
     name: string,
-    metadata: ArtistMetadataDatatype,
-    availability: tag.TagDatatype,
+    metadata: ArtistMetadataPDT,
+    availability: string,
     rights: RightDatatype[],
     addedAt?: Date,
     updatedAt?: Date
@@ -171,25 +171,25 @@ export class Artist {
     }
 
 
-    toData(): ArtistDatatype {
+    toPrismaData(): ArtistPDT {
         return {
             id: this.id,
             name: this.name,
-            metadata: this.metadata.toData(),
-            availability: this.availability.toData(),
-            rights: this.rights.map((right) => right.toData()),
+            metadata: this.metadata.toPrismaData(),
+            availability: this.availability.toPrismaData(),
+            rights: this.rights.map((right) => right.toPrismaData()),
             addedAt: this.addedAt,
             updatedAt: this.updatedAt
         }
     }
 
-    static fromData(data: ArtistDatatype) {
+    static fromPrismaData(data: ArtistPDT) {
         return new this(
             data.id,
             data.name,
-            ArtistMetadata.fromData(data.metadata),
-            ArtistAvailabilityTag.fromData(data.availability),
-            data.rights.map((rightData) => Right.fromData(rightData)),
+            ArtistMetadata.fromPrismaData(data.metadata),
+            ArtistAvailabilityValues.fromPrismaData(data.availability),
+            data.rights.map((rightData) => Right.fromPrismaData(rightData)),
             data.addedAt,
             data.updatedAt
         );

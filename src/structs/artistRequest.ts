@@ -10,12 +10,12 @@ import * as artist from "./artist"
 export class ContactStatusTag extends tag.Tag {};
 
 /** Contains all possible contact states. */
-export const ContactStatusValues = {
+export const ContactStatusValues = tag.getTagList({
     NOT_CONTACTED: new ContactStatusTag("Not Contacted", "Artist hasn't been contacted yet"), 
     NO_RESPONSE: new ContactStatusTag("No Response", "Artist contacted but no response after criteria has been met."), 
     PENDING_RESPONSE: new ContactStatusTag("Pending Response", "Artist contacted but response from artist is pending."),
     COMPLETED_CONTACT: new ContactStatusTag("Completed Contact", "Artist contacted and has responded.")
-};
+});
 
 
 
@@ -23,20 +23,20 @@ export const ContactStatusValues = {
 export class ApprovalStatusTag extends tag.Tag {};
 
 /** Represents the artist's status in the approval process */
-export const ApprovalStatusValues = {
+export const ApprovalStatusValues = tag.getTagList({
     PENDING_APPROVAL: new ApprovalStatusTag("Pending Approval", "The request requires approval by mods"),
     COMPLETED_APPROVAL: new ApprovalStatusTag("Completed Approval", "The approval process is complete for this request.")
-};
+});
 
 
 
-export type CreateArtistRequestDatatype = {
+export type CreateArtistRequestPDT = {
     id: number,
-    artist: artist.ArtistDatatype,
+    artist: artist.ArtistPDT,
     requestorUserId: number,
     proofPaths: string[],
-    contactStatus: tag.TagDatatype,
-    approvalStatus?: tag.TagDatatype
+    contactStatus: string,
+    approvalStatus?: string
 }
 /** Represents a request to add an artist to the database. */
 export class CreateArtistRequest {
@@ -64,25 +64,25 @@ export class CreateArtistRequest {
     }
 
 
-    toData(): CreateArtistRequestDatatype {
+    toPrismaData(): CreateArtistRequestPDT {
         return {
             id: this.id,
-            artist: this.artist.toData(),
+            artist: this.artist.toPrismaData(),
             requestorUserId: this.requestorUserId,
             proofPaths: this.proofPaths,
-            contactStatus: this.contactStatus,
-            approvalStatus: this.approvalStatus,
+            contactStatus: this.contactStatus.toPrismaData(),
+            approvalStatus: this.approvalStatus.toPrismaData(),
         }
     }
 
-    static fromData(data: CreateArtistRequestDatatype) {
+    static fromPrismaData(data: CreateArtistRequestPDT) {
         return new this(
             data.id,
-            artist.Artist.fromData(data.artist),
+            artist.Artist.fromPrismaData(data.artist),
             data.requestorUserId,
             data.proofPaths,
-            data.contactStatus,
-            data.approvalStatus
+            ContactStatusValues.fromPrismaData(data.contactStatus),
+            ApprovalStatusValues.fromPrismaData(data.approvalStatus)
         );
     }
 }

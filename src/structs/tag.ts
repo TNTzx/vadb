@@ -2,23 +2,33 @@
 
 
 
-export type TagDatatype = {tag: string, description: string}
+export type TagDatatype = string
 /** Represents a tag. */
 export class Tag {
-    tag: string
+    tagName: string
     description: string
 
-    constructor(tag: string, description: string) {
-        this.tag = tag
+    constructor(tagName: string, description: string) {
+        this.tagName = tagName
         this.description = description
     }
 
 
-    toData(): TagDatatype {
-        return {tag: this.tag, description: this.description}
+    toPrismaData(): TagDatatype {
+        return this.tagName
     }
+}
 
-    static fromData(data: TagDatatype) {
-        return new this(data.tag, data.description);
-    }
+
+/** Represents a tag list. */
+export function getTagList<T extends Tag, U>(partialTagList: U) {
+    return Object.assign({
+        getFromTagName(tagName: string): T {
+            return this[tagName]
+        },
+
+        fromPrismaData(data: TagDatatype): T {
+            return this.getFromTagName(data)
+        }
+    }, partialTagList)
 }
