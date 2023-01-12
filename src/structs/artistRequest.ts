@@ -30,6 +30,14 @@ export const ApprovalStatusValues = {
 
 
 
+export type CreateArtistRequestDatatype = {
+    id: number,
+    artist: artist.ArtistDatatype,
+    requestorUserId: number,
+    proofPaths: string[],
+    contactStatus: tag.TagDatatype,
+    approvalStatus?: tag.TagDatatype
+}
 /** Represents a request to add an artist to the database. */
 export class CreateArtistRequest {
     id: number;
@@ -53,6 +61,29 @@ export class CreateArtistRequest {
         this.proofPaths = proofPaths
         this.contactStatus = contactStatus
         this.approvalStatus = approvalStatus
+    }
+
+
+    toData(): CreateArtistRequestDatatype {
+        return {
+            id: this.id,
+            artist: this.artist.toData(),
+            requestorUserId: this.requestorUserId,
+            proofPaths: this.proofPaths,
+            contactStatus: this.contactStatus,
+            approvalStatus: this.approvalStatus,
+        }
+    }
+
+    static fromData(data: CreateArtistRequestDatatype) {
+        return new this(
+            data.id,
+            artist.Artist.fromData(data.artist),
+            data.requestorUserId,
+            data.proofPaths,
+            data.contactStatus,
+            data.approvalStatus
+        );
     }
 }
 

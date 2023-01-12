@@ -5,7 +5,7 @@ import * as tag from "./tag";
 
 
 
-export type SongDataType = {
+export type SongDatatype = {
     audioPath: string;
     title: string;
     romanizedTitle?: string;
@@ -22,7 +22,7 @@ export class Song {
         this.romanizedTitle = romanizedTitle
     }
 
-    toData(): SongDataType {
+    toData(): SongDatatype {
         return {
             audioPath: this.audioPath,
             title: this.title,
@@ -30,19 +30,19 @@ export class Song {
         }
     }
 
-    static fromData(data: SongDataType) {
+    static fromData(data: SongDatatype) {
         return new this(data.audioPath, data.title, data.romanizedTitle);
     }
 }
 
 
 
-export type ArtistMetadataDataType = {
+export type ArtistMetadataDatatype = {
     aliases: string[],
     description: string,
     notes: string,
     genre: string,
-    songs: SongDataType[],
+    songs: SongDatatype[],
     socials: string[]
 }
 /** Contains additional metadata for the artist. */
@@ -72,28 +72,29 @@ export class ArtistMetadata {
     }
 
 
-    toData(): ArtistMetadataDataType {
+    toData(): ArtistMetadataDatatype {
         return {
             aliases: this.aliases,
             description: this.description,
             notes: this.notes,
             genre: this.genre,
-            songs: this.songs.map((value) => {return value.toData()}),
+            songs: this.songs.map((song) => song.toData()),
             socials: this.socials
         }
     }
 
-    static fromData(data: ArtistMetadataDataType) {
+    static fromData(data: ArtistMetadataDatatype) {
         return new this(
             data.aliases,
             data.description,
             data.notes,
             data.genre,
-            data.songs.map((value) => {return Song.fromData(value)}),
+            data.songs.map((songData) => Song.fromData(songData)),
             data.socials
         );
     }
 }
+
 
 
 /** Represents the artist's availability. */
@@ -109,7 +110,7 @@ export const ArtistAvailabilityValues = Object.freeze({
 
 
 
-
+export type RightDatatype = {identifier: string, isAllowed: boolean}
 /** Contains information about a specific verified or disallowed song or set of songs. */
 export class Right {
     identifier: string;
@@ -119,10 +120,28 @@ export class Right {
         this.identifier = identifier;
         this.isAllowed = isAllowed;
     };
+
+
+    toData(): RightDatatype {
+        return {identifier: this.identifier, isAllowed: this.isAllowed}
+    }
+
+    static fromData(data: RightDatatype) {
+        return new this(data.identifier, data.isAllowed);
+    }
 };
 
 
 
+export type ArtistDatatype = {
+    id: number,
+    name: string,
+    metadata: ArtistMetadataDatatype,
+    availability: tag.TagDatatype,
+    rights: RightDatatype[],
+    addedAt?: Date,
+    updatedAt?: Date
+}
 /** The artist itself. */
 export class Artist {
     id: number;
@@ -130,8 +149,8 @@ export class Artist {
     metadata: ArtistMetadata;
     availability: ArtistAvailabilityTag;
     rights: Right[];
-    addedAt: Date;
-    updatedAt: Date;
+    addedAt?: Date;
+    updatedAt?: Date;
 
     constructor(
         id: number,
@@ -149,5 +168,30 @@ export class Artist {
         this.rights = rights;
         this.addedAt = addedAt;
         this.updatedAt = updatedAt;
+    }
+
+
+    toData(): ArtistDatatype {
+        return {
+            id: this.id,
+            name: this.name,
+            metadata: this.metadata.toData(),
+            availability: this.availability.toData(),
+            rights: this.rights.map((right) => right.toData()),
+            addedAt: this.addedAt,
+            updatedAt: this.updatedAt
+        }
+    }
+
+    static fromData(data: ArtistDatatype) {
+        return new this(
+            data.id,
+            data.name,
+            ArtistMetadata.fromData(data.metadata),
+            ArtistAvailabilityTag.fromData(data.availability),
+            data.rights.map((rightData) => Right.fromData(rightData)),
+            data.addedAt,
+            data.updatedAt
+        );
     }
 }

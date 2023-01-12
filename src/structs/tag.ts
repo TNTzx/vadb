@@ -2,7 +2,7 @@
 
 
 
-export type TagDataType = {tag: string, description: string}
+export type TagDatatype = {tag: string, description: string}
 /** Represents a tag. */
 export class Tag {
     tag: string
@@ -14,11 +14,11 @@ export class Tag {
     }
 
 
-    toData(): TagDataType {
+    toData(): TagDatatype {
         return {tag: this.tag, description: this.description}
     }
 
-    static fromData(data: TagDataType) {
+    static fromData(data: TagDatatype) {
         return new this(data.tag, data.description);
     }
 }
