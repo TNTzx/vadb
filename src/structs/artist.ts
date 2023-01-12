@@ -75,6 +75,7 @@ export class Right {
 
 
 
+/** The artist itself. */
 export class Artist {
     id: number;
     name: string;
