@@ -7,7 +7,7 @@ import Logger from "../old_code/lib/logger";
 import { ExtendedReq, ExtendedRes } from "./express"
 
 
-
+// TODO
 export default function graphqlMidware(app: Express.Express, routersPath: string) {
     function read(dirPath: string, router: string = "") {
         let files = Fs.readdirSync(dirPath);
